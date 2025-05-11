@@ -18,6 +18,7 @@ ScaffoldingReadMe.txt
 *.user
 *.userosscache
 *.sln.docstates
+appsettings.json
 
 # OS generated files
 .DS_Store

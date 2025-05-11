@@ -1,56 +1,42 @@
-using AgriEnergyConnect.API.Data;
-using AgriEnergyConnect.API.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using AgriEnergyConnect.API.Services;
+using Microsoft.AspNetCore.Mvc;
 
-namespace AgriEnergyConnect.API.Services
+namespace AgriEnergyConnect.API.Controllers
 {
-    public class AuthService
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AuthController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IConfiguration _configuration;
+        private readonly AuthService _authService;
 
-        public AuthService(ApplicationDbContext context, IConfiguration configuration)
+        public AuthController(AuthService authService)
         {
-            _context = context;
-            _configuration = configuration;
+            _authService = authService;
         }
 
-        public async Task<(bool success, string token, string role, int? farmerId)> Authenticate(string username, string password)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            // In a real app, you would validate the password hash here
-            var user = await _context.Users
-                .Include(u => u.Farmer)
-                .FirstOrDefaultAsync(u => u.Username == username);
-
-            if (user == null)
+            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
             {
-                return (false, null, null, null);
+                return BadRequest(new { message = "Username and password are required" });
             }
 
-            // Create token
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["JWT:Secret"]);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Role, user.Role)
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var (success, token, role, farmerId) = await _authService.Authenticate(request.Username, request.Password);
 
-            return (true, tokenHandler.WriteToken(token), user.Role, user.Farmer?.Id);
+            if (!success)
+            {
+                return Unauthorized(new { message = "Invalid username or password" });
+            }
+
+            return Ok(new
+            {
+                token,
+                role,
+                farmerId
+            });
         }
     }
-
 
     public class LoginRequest
     {

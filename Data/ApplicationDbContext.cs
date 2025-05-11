@@ -18,7 +18,7 @@ namespace AgriEnergyConnect.API.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure relationships
+
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Farmer)
                 .WithOne(f => f.User)
@@ -29,8 +29,7 @@ namespace AgriEnergyConnect.API.Data
                 .WithOne(p => p.Farmer)
                 .HasForeignKey(p => p.FarmerId);
 
-            // Seed data
-            SeedData(modelBuilder);
+
         }
 
         private void SeedData(ModelBuilder modelBuilder)

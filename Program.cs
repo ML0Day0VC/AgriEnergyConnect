@@ -10,8 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container
 builder.Services.AddControllers();
 
-// Register AuthService
+// Register Services
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<PasswordService>();
 
 // Configure SQLite
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -41,22 +42,31 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader());
 });
 
-//bangger librarry
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-//TODO: check if express.js works with this pipeline
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
     
-    // apply le migrations too before running this cooked shit 
+    // Initialize the database with default data
     using (var scope = app.Services.CreateScope())
     {
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        dbContext.Database.Migrate();
+        var services = scope.ServiceProvider;
+        try
+        {
+            var context = services.GetRequiredService<ApplicationDbContext>();
+            var passwordService = services.GetRequiredService<PasswordService>();
+            DbInitializer.Initialize(context, passwordService);
+        }
+        catch (Exception ex)
+        {
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            logger.LogError(ex, "An error occurred while seeding the database.");
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 using AgriEnergyConnect.API.Data;
 using AgriEnergyConnect.API.Models;
+using AgriEnergyConnect.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,12 @@ namespace AgriEnergyConnect.API.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public FarmersController(ApplicationDbContext context)
+        private readonly PasswordService _passwordService;
+
+        public FarmersController(ApplicationDbContext context, PasswordService passwordService)
         {
             _context = context;
+            _passwordService = passwordService;
         }
 
         // GET: api/farmers
@@ -55,9 +59,11 @@ namespace AgriEnergyConnect.API.Controllers
             var user = new User
             {
                 Username = request.Username,
-                PasswordHash = "AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==", // In real app, hash the password
                 Role = "Farmer"
             };
+
+            // Hash the password
+            user.PasswordHash = _passwordService.HashPassword(user, request.Password);
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
