@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="agri-energy-connect.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="2106"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="Farmers" custom_title="0" dock_id="1" table="4,7:mainFarmers"/><dock_state state="000000ff00000000fd0000000100000002000002480000020cfc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000000002480000011e00ffffff000002480000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="Farmers" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="35"/><column index="2" value="103"/><column index="3" value="111"/><column index="4" value="151"/><column index="5" value="48"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">DELETE FROM Products;
+DELETE FROM Farmers;
+DELETE FROM Users;
+
+-- Reset auto-increment counters
+DELETE FROM sqlite_sequence WHERE name='Users';
+DELETE FROM sqlite_sequence WHERE name='Farmers';
+DELETE FROM sqlite_sequence WHERE name='Products';
+
+-- Insert Users
+-- Note: All users have the password 'Password123!' (this is the hashed version)
+INSERT INTO Users (Username, PasswordHash, Role) VALUES
+-- Employee users
+('employee1', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Employee'),
+('admin', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Employee'),
+('supervisor', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Employee'),
+('coordinator', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Employee'),
+
+-- Farmer users - Crop Farmers
+('farmer1', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Farmer'),
+('farmer2', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Farmer'),
+('johnsmith', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Farmer'),
+('sarahjones', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Farmer'),
+('davidmiller', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Farmer'),
+
+-- Farmer users - Livestock Farmers
+('michaelbrown', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Farmer'),
+('amandawhite', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Farmer'),
+('robertjohnson', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Farmer'),
+
+-- Farmer users - Mixed Farmers
+('jenniferlee', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Farmer'),
+('williamdavis', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Farmer'),
+
+-- Farmer users - Green Energy Specialists
+('elizabethgreen', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Farmer'),
+('thomaspower', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Farmer'),
+('nataliesun', 'AQAAAAEAACcQAAAAEEF5J8cG1bQpB2MFuIbPJKU3DzYl4kjJbxkLFQJiDo0/iN1UNTntcDZAYjcphjXsAg==', 'Farmer');
+
+-- Insert Farmers
+INSERT INTO Farmers (Name, Location, ContactInfo, UserId) VALUES
+-- Crop Farmers
+('John Smith', 'Western Cape', 'john@example.com', 5),
+('Mary Johnson', 'Eastern Cape', 'mary@example.com', 6),
+('Robert Brown', 'Northern Cape', 'robert@example.com', 7),
+('Sarah Jones', 'Limpopo', 'sarah@example.com', 8),
+('David Miller', 'Free State', 'david@example.com', 9),
+
+-- Livestock Farmers
+('Michael Brown', 'KwaZulu-Natal', 'michael@example.com', 10),
+('Amanda White', 'Mpumalanga', 'amanda@example.com', 11),
+('Robert Johnson', 'North West', 'robertj@example.com', 12),
+
+-- Mixed Farmers
+('Jennifer Lee', 'Gauteng', 'jennifer@example.com', 13),
+('William Davis', 'Western Cape', 'william@example.com', 14),
+
+-- Green Energy Specialists
+('Elizabeth Green', 'Eastern Cape', 'elizabeth@example.com', 15),
+('Thomas Power', 'Free State', 'thomas@example.com', 16),
+('Natalie Sun', 'Northern Cape', 'natalie@example.com', 17);
+
+-- Insert Products
+-- Crop Farmers - Vegetables &amp; Fruits
+INSERT INTO Products (Name, Category, ProductionDate, FarmerId) VALUES
+-- John Smith's products
+('Organic Tomatoes', 'Vegetables', date('now', '-45 days'), 1),
+('Fresh Spinach', 'Vegetables', date('now', '-30 days'), 1),
+('Sweet Corn', 'Vegetables', date('now', '-60 days'), 1),
+('Organic Apples', 'Fruit', date('now', '-15 days'), 1),
+
+-- Mary Johnson's products
+('Heirloom Carrots', 'Vegetables', date('now', '-20 days'), 2),
+('Organic Potatoes', 'Vegetables', date('now', '-40 days'), 2),
+('Bell Peppers', 'Vegetables', date('now', '-25 days'), 2),
+('Table Grapes', 'Fruit', date('now', '-10 days'), 2),
+('Strawberries', 'Fruit', date('now', '-5 days'), 2),
+
+-- Robert Brown's products
+('Butternut Squash', 'Vegetables', date('now', '-50 days'), 3),
+('Green Beans', 'Vegetables', date('now', '-35 days'), 3),
+('Pumpkins', 'Vegetables', date('now', '-70 days'), 3),
+
+-- Sarah Jones's products
+('Organic Cabbage', 'Vegetables', date('now', '-25 days'), 4),
+('Onions', 'Vegetables', date('now', '-80 days'), 4),
+('Garlic', 'Vegetables', date('now', '-90 days'), 4),
+('Peaches', 'Fruit', date('now', '-15 days'), 4),
+
+-- David Miller's products
+('Organic Potatoes', 'Vegetables', date('now', '-40 days'), 5),
+('Organic Tomatoes', 'Vegetables', date('now', '-28 days'), 5),
+('Nectarines', 'Fruit', date('now', '-12 days'), 5),
+('Citrus Assortment', 'Fruit', date('now', '-18 days'), 5),
+
+-- Livestock Farmers - Meat, Poultry &amp; Dairy
+-- Michael Brown's products
+('Grass-fed Beef', 'Meat', date('now', '-30 days'), 6),
+('Free-range Lamb', 'Meat', date('now', '-45 days'), 6),
+('Organic Pork', 'Meat', date('now', '-60 days'), 6),
+('Free-range Eggs', 'Poultry', date('now', '-5 days'), 6),
+('Organic Chicken', 'Poultry', date('now', '-10 days'), 6),
+
+-- Amanda White's products
+('Wild Game Meat', 'Meat', date('now', '-40 days'), 7),
+('Venison', 'Meat', date('now', '-50 days'), 7),
+('Heritage Turkey', 'Poultry', date('now', '-30 days'), 7),
+('Duck', 'Poultry', date('now', '-25 days'), 7),
+('Raw Milk', 'Dairy', date('now', '-3 days'), 7),
+('Artisanal Cheese', 'Dairy', date('now', '-15 days'), 7),
+
+-- Robert Johnson's products
+('Bison Steaks', 'Meat', date('now', '-35 days'), 8),
+('Goat Meat', 'Meat', date('now', '-40 days'), 8),
+('Quail Eggs', 'Poultry', date('now', '-7 days'), 8),
+('Pheasant', 'Poultry', date('now', '-20 days'), 8),
+('Goat Cheese', 'Dairy', date('now', '-10 days'), 8),
+
+-- Mixed Farmers - Various products
+-- Jennifer Lee's products
+('Organic Tomatoes', 'Vegetables', date('now', '-22 days'), 9),
+('Blueberries', 'Fruit', date('now', '-14 days'), 9),
+('Free-range Eggs', 'Poultry', date('now', '-4 days'), 9),
+('Grass-fed Beef', 'Meat', date('now', '-38 days'), 9),
+('Cultured Butter', 'Dairy', date('now', '-8 days'), 9),
+
+-- William Davis's products
+('Sweet Corn', 'Vegetables', date('now', '-30 days'), 10),
+('Watermelons', 'Fruit', date('now', '-18 days'), 10),
+('Pears', 'Fruit', date('now', '-25 days'), 10),
+('Organic Chicken', 'Poultry', date('now', '-12 days'), 10),
+('Premium Beef Cuts', 'Meat', date('now', '-40 days'), 10),
+('Organic Yogurt', 'Dairy', date('now', '-7 days'), 10),
+
+-- Green Energy Specialists
+-- Elizabeth Green's products
+('Solar Panels', 'Green Energy', date('now', '-60 days'), 11),
+('Solar Water Pumps', 'Green Energy', date('now', '-45 days'), 11),
+('Solar Greenhouse Systems', 'Green Energy', date('now', '-30 days'), 11),
+('Energy Efficient Irrigation Systems', 'Green Energy', date('now', '-90 days'), 11),
+
+-- Thomas Power's products
+('Wind Turbine Kits', 'Green Energy', date('now', '-75 days'), 12),
+('Biogas Generators', 'Green Energy', date('now', '-50 days'), 12),
+('Energy Storage Solutions', 'Green Energy', date('now', '-40 days'), 12),
+
+-- Natalie Sun's products
+('Solar Panels', 'Green Energy', date('now', '-55 days'), 13),
+('Biodiesel Production Kits', 'Green Energy', date('now', '-65 days'), 13),
+('Solar Dryers', 'Green Energy', date('now', '-35 days'), 13),
+('Renewable Energy Consulting', 'Green Energy', date('now', '-25 days'), 13);</sql><current_tab id="0"/></tab_sql></sqlb_project>
