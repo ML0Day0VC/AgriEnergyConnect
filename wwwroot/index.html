@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agri-Energy Connect</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Agri-Energy Connect Platform</h1>
+        
+        <!-- Login Section -->
+        <div id="login-section" class="section">
+            <h2>Login</h2>
+            <div class="form">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" placeholder="Enter password">
+                </div>
+                <button id="login-btn" class="btn">Login</button>
+                <div id="login-message" class="message"></div>
+            </div>
+        </div>
+        
+        <!-- Farmer Section (Hidden by default) -->
+        <div id="farmer-section" class="section hidden">
+            <h2>Farmer Dashboard</h2>
+            <div id="farmer-info" class="user-info"></div>
+            <button id="logout-btn-farmer" class="btn btn-secondary">Logout</button>
+            
+            <div class="card">
+                <h3>Add New Product</h3>
+                <div class="form">
+                    <div class="form-group">
+                        <label for="product-name">Product Name:</label>
+                        <input type="text" id="product-name" placeholder="Enter product name">
+                    </div>
+                    <div class="form-group">
+                        <label for="product-category">Category:</label>
+                        <input type="text" id="product-category" placeholder="Enter category">
+                    </div>
+                    <div class="form-group">
+                        <label for="production-date">Production Date:</label>
+                        <input type="date" id="production-date">
+                    </div>
+                    <button id="add-product-btn" class="btn">Add Product</button>
+                    <div id="add-product-message" class="message"></div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>My Products</h3>
+                <div class="filters">
+                    <div class="form-group">
+                        <label for="start-date-farmer">Start Date:</label>
+                        <input type="date" id="start-date-farmer">
+                    </div>
+                    <div class="form-group">
+                        <label for="end-date-farmer">End Date:</label>
+                        <input type="date" id="end-date-farmer">
+                    </div>
+                    <div class="form-group">
+                        <label for="category-filter-farmer">Category:</label>
+                        <input type="text" id="category-filter-farmer" placeholder="Filter by category">
+                    </div>
+                </div>
+                <button id="load-products-farmer-btn" class="btn">Load My Products</button>
+                <div id="products-list-farmer" class="results-list"></div>
+            </div>
+        </div>
+        
+        <!-- Employee Section (Hidden by default) -->
+        <div id="employee-section" class="section hidden">
+            <h2>Employee Dashboard</h2>
+            <div id="employee-info" class="user-info"></div>
+            <button id="logout-btn-employee" class="btn btn-secondary">Logout</button>
+            
+            <div class="card">
+                <h3>Add New Farmer</h3>
+                <div class="form">
+                    <div class="form-group">
+                        <label for="farmer-username">Username:</label>
+                        <input type="text" id="farmer-username" placeholder="Enter username">
+                    </div>
+                    <div class="form-group">
+                        <label for="farmer-password">Password:</label>
+                        <input type="password" id="farmer-password" placeholder="Enter password">
+                    </div>
+                    <div class="form-group">
+                        <label for="farmer-name">Name:</label>
+                        <input type="text" id="farmer-name" placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label for="farmer-location">Location:</label>
+                        <input type="text" id="farmer-location" placeholder="Enter location">
+                    </div>
+                    <div class="form-group">
+                        <label for="farmer-contact">Contact Info:</label>
+                        <input type="text" id="farmer-contact" placeholder="Enter contact info">
+                    </div>
+                    <button id="add-farmer-btn" class="btn">Add Farmer</button>
+                    <div id="add-farmer-message" class="message"></div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>View Products by Farmer</h3>
+                <div class="form">
+                    <div class="form-group">
+                        <label for="farmer-select">Select Farmer:</label>
+                        <select id="farmer-select">
+                            <option value="">-- Select Farmer --</option>
+                        </select>
+                    </div>
+                    <div class="filters">
+                        <div class="form-group">
+                            <label for="start-date-employee">Start Date:</label>
+                            <input type="date" id="start-date-employee">
+                        </div>
+                        <div class="form-group">
+                            <label for="end-date-employee">End Date:</label>
+                            <input type="date" id="end-date-employee">
+                        </div>
+                        <div class="form-group">
+                            <label for="category-filter-employee">Category:</label>
+                            <input type="text" id="category-filter-employee" placeholder="Filter by category">
+                        </div>
+                    </div>
+                    <button id="load-products-employee-btn" class="btn">Load Products</button>
+                    <div id="products-list-employee" class="results-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

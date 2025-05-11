@@ -1,0 +1,160 @@
+/* Basic styling for the application */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1, h2, h3 {
+    color: #4CAF50;
+}
+
+h1 {
+    text-align: center;
+    padding: 15px;
+    border-bottom: 2px solid #4CAF50;
+    margin-bottom: 30px;
+}
+
+/* Sections */
+.section {
+    margin-bottom: 30px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Cards */
+.card {
+    background: white;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Forms */
+.form {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.filters .form-group {
+    flex: 1 1 200px;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    background: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn:hover {
+    background: #45a049;
+}
+
+.btn-secondary {
+    background: #f0ad4e;
+}
+
+.btn-secondary:hover {
+    background: #ec971f;
+}
+
+/* Messages */
+.message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.success {
+    background-color: #dff0d8;
+    border: 1px solid #d6e9c6;
+    color: #3c763d;
+}
+
+.error {
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+    color: #a94442;
+}
+
+/* Results List */
+.results-list {
+    margin-top: 20px;
+}
+
+.result-item {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.result-item h4 {
+    margin-top: 0;
+    color: #333;
+}
+
+.result-item p {
+    margin: 5px 0;
+}
+
+.user-info {
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .filters {
+        flex-direction: column;
+    }
+    
+    .filters .form-group {
+        width: 100%;
+    }
+}

@@ -1,0 +1,48 @@
+# Build results
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Entity Framework
+Migrations/
+
+# SQLite database
+*.db
+
+# Logs
+*.log
+
+# Publish output
+publish/
+out/
+
+# Static web assets
+wwwroot/staticwebassets/
+
+# Rider
+.idea/
+
+# Others
+*.vspscc
+*.vssscc
+_ReSharper*/
