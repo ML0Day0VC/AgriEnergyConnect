@@ -47,3 +47,4 @@ wwwroot/staticwebassets/
 *.vspscc
 *.vssscc
 _ReSharper*/
+appsettings.json

@@ -35,32 +35,34 @@ namespace AgriEnergyConnect.API.Data
             // Create default users with roles
             var users = new List<User>
             {
+                // Admin user - NEW!
+                new User { Username = "admin", Role = "Admin" },
+                
                 // Employee/Admin users
                 new User { Username = "employee1", Role = "Employee" },
-                new User { Username = "admin", Role = "Employee" },
                 new User { Username = "supervisor", Role = "Employee" },
                 new User { Username = "coordinator", Role = "Employee" },
 
                 // Farmer users - Crop Farmers
-                new User { Username = "johndoe", Role = "Farmer" },            // Vegetables & Fruits
-                new User { Username = "emilyjohnson", Role = "Farmer" },       // Vegetables & Fruits
-                new User { Username = "danielthomson", Role = "Farmer" },      // Vegetables
-                new User { Username = "oliviasmith", Role = "Farmer" },        // Vegetables & Fruits
-                new User { Username = "williamharris", Role = "Farmer" },      // Vegetables
+                new User { Username = "johndoe", Role = "Farmer" },
+                new User { Username = "emilyjohnson", Role = "Farmer" },
+                new User { Username = "danielthomson", Role = "Farmer" },
+                new User { Username = "oliviasmith", Role = "Farmer" },
+                new User { Username = "williamharris", Role = "Farmer" },
                 
                 // Farmer users - Livestock Farmers
-                new User { Username = "jamesanderson", Role = "Farmer" },      // Meat & Poultry
-                new User { Username = "sophiawilliams", Role = "Farmer" },     // Meat, Poultry & Dairy
-                new User { Username = "jacksonbrown", Role = "Farmer" },       // Meat & Poultry
+                new User { Username = "jamesanderson", Role = "Farmer" },
+                new User { Username = "sophiawilliams", Role = "Farmer" },
+                new User { Username = "jacksonbrown", Role = "Farmer" },
                 
                 // Farmer users - Mixed Farmers
-                new User { Username = "oliverjones", Role = "Farmer" },        // Mixed
-                new User { Username = "isabelladavis", Role = "Farmer" },      // Mixed
+                new User { Username = "oliverjones", Role = "Farmer" },
+                new User { Username = "isabelladavis", Role = "Farmer" },
                 
                 // Farmer users - Green Energy Specialists
-                new User { Username = "noahgreen", Role = "Farmer" },          // Green Energy
-                new User { Username = "emmawatts", Role = "Farmer" },          // Green Energy
-                new User { Username = "lucassolaris", Role = "Farmer" }        // Green Energy
+                new User { Username = "noahgreen", Role = "Farmer" },
+                new User { Username = "emmawatts", Role = "Farmer" },
+                new User { Username = "lucassolaris", Role = "Farmer" }
             };
 
             // Set the default password for all users
@@ -250,7 +252,7 @@ namespace AgriEnergyConnect.API.Data
             // Add vegetable products for crop farmers (first 5 farmers)
             foreach (var farmer in farmers.Take(5))
             {
-                // Each crop farmer has 3-5 vegetable products (increased from 2-4)
+                // Each crop farmer has 3-5 vegetable products
                 int count = random.Next(3, 6);
                 var selectedProducts = vegetableProducts.OrderBy(x => random.Next()).Take(count).ToList();
                 
@@ -265,10 +267,10 @@ namespace AgriEnergyConnect.API.Data
                     });
                 }
                 
-                // Most also have fruits (increased from 50% to 80% chance)
+                // Most also have fruits
                 if (random.Next(5) < 4) // 80% chance
                 {
-                    count = random.Next(2, 4); // Increased from 1-3
+                    count = random.Next(2, 4);
                     selectedProducts = fruitProducts.OrderBy(x => random.Next()).Take(count).ToList();
                     
                     foreach (var product in selectedProducts)
@@ -287,7 +289,7 @@ namespace AgriEnergyConnect.API.Data
             // Add meat and poultry products for livestock farmers (next 3 farmers)
             foreach (var farmer in farmers.Skip(5).Take(3))
             {
-                // Each livestock farmer has 3-4 meat products (increased from 2-3)
+                // Each livestock farmer has 3-4 meat products
                 int count = random.Next(3, 5);
                 var selectedProducts = meatProducts.OrderBy(x => random.Next()).Take(count).ToList();
                 
@@ -302,7 +304,7 @@ namespace AgriEnergyConnect.API.Data
                     });
                 }
                 
-                // Each livestock farmer has 2-3 poultry products (increased from 1-2)
+                // Each livestock farmer has 2-3 poultry products
                 count = random.Next(2, 4);
                 selectedProducts = poultryProducts.OrderBy(x => random.Next()).Take(count).ToList();
                 
@@ -317,10 +319,10 @@ namespace AgriEnergyConnect.API.Data
                     });
                 }
                 
-                // Most also have dairy (increased from 50% to 80% chance)
+                // Most also have dairy
                 if (random.Next(5) < 4) // 80% chance
                 {
-                    count = random.Next(2, 4); // Increased from 1-3
+                    count = random.Next(2, 4);
                     selectedProducts = dairyProducts.OrderBy(x => random.Next()).Take(count).ToList();
                     
                     foreach (var product in selectedProducts)
@@ -344,7 +346,7 @@ namespace AgriEnergyConnect.API.Data
                 
                 foreach (var category in categories)
                 {
-                    if (random.Next(5) < 4) // 80% chance for each category (increased from 66%)
+                    if (random.Next(5) < 4) // 80% chance for each category
                     {
                         int count = random.Next(1, 3);
                         var selectedProducts = category.OrderBy(x => random.Next()).Take(count).ToList();
@@ -373,7 +375,7 @@ namespace AgriEnergyConnect.API.Data
             // Add green energy products for energy specialists (last 3 farmers)
             foreach (var farmer in farmers.Skip(10))
             {
-                // Each green energy specialist has 3-5 green energy products (increased from 2-4)
+                // Each green energy specialist has 3-5 green energy products
                 int count = random.Next(3, 6);
                 var selectedProducts = greenEnergyProducts.OrderBy(x => random.Next()).Take(count).ToList();
                 
