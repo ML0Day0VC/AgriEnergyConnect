@@ -1,5 +1,6 @@
 using AgriEnergyConnect.API.Models;
 using AgriEnergyConnect.API.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace AgriEnergyConnect.API.Data
 {
@@ -7,17 +8,24 @@ namespace AgriEnergyConnect.API.Data
     {
         public static void Initialize(ApplicationDbContext context, PasswordService passwordService)
         {
+            // Force recreation of database during development for testing
+            // Comment these lines for production
+            Console.WriteLine("Ensuring database is created with fresh data...");
+            context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            // Check if any users exist
+            // Check if any users exist - but we've just deleted the DB so this is just a safeguard
             if (context.Users.Any())
             {
+                Console.WriteLine("Database already has data, skipping initialization");
                 return; // DB has been seeded
             }
 
             SeedUsers(context, passwordService);
             SeedFarmers(context);
             SeedProducts(context);
+            
+            Console.WriteLine("Database initialization completed successfully!");
         }
 
         private static void SeedUsers(ApplicationDbContext context, PasswordService passwordService)
@@ -27,36 +35,36 @@ namespace AgriEnergyConnect.API.Data
             // Create default users with roles
             var users = new List<User>
             {
-                // Employee users
+                // Employee/Admin users
                 new User { Username = "employee1", Role = "Employee" },
                 new User { Username = "admin", Role = "Employee" },
                 new User { Username = "supervisor", Role = "Employee" },
                 new User { Username = "coordinator", Role = "Employee" },
 
                 // Farmer users - Crop Farmers
-                new User { Username = "farmer1", Role = "Farmer" },
-                new User { Username = "farmer2", Role = "Farmer" },
-                new User { Username = "johnsmith", Role = "Farmer" },
-                new User { Username = "sarahjones", Role = "Farmer" },
-                new User { Username = "davidmiller", Role = "Farmer" },
+                new User { Username = "johndoe", Role = "Farmer" },            // Vegetables & Fruits
+                new User { Username = "emilyjohnson", Role = "Farmer" },       // Vegetables & Fruits
+                new User { Username = "danielthomson", Role = "Farmer" },      // Vegetables
+                new User { Username = "oliviasmith", Role = "Farmer" },        // Vegetables & Fruits
+                new User { Username = "williamharris", Role = "Farmer" },      // Vegetables
                 
                 // Farmer users - Livestock Farmers
-                new User { Username = "michaelbrown", Role = "Farmer" },
-                new User { Username = "amandawhite", Role = "Farmer" },
-                new User { Username = "robertjohnson", Role = "Farmer" },
+                new User { Username = "jamesanderson", Role = "Farmer" },      // Meat & Poultry
+                new User { Username = "sophiawilliams", Role = "Farmer" },     // Meat, Poultry & Dairy
+                new User { Username = "jacksonbrown", Role = "Farmer" },       // Meat & Poultry
                 
                 // Farmer users - Mixed Farmers
-                new User { Username = "jenniferlee", Role = "Farmer" },
-                new User { Username = "williamdavis", Role = "Farmer" },
+                new User { Username = "oliverjones", Role = "Farmer" },        // Mixed
+                new User { Username = "isabelladavis", Role = "Farmer" },      // Mixed
                 
                 // Farmer users - Green Energy Specialists
-                new User { Username = "elizabethgreen", Role = "Farmer" },
-                new User { Username = "thomaspower", Role = "Farmer" },
-                new User { Username = "nataliesun", Role = "Farmer" }
+                new User { Username = "noahgreen", Role = "Farmer" },          // Green Energy
+                new User { Username = "emmawatts", Role = "Farmer" },          // Green Energy
+                new User { Username = "lucassolaris", Role = "Farmer" }        // Green Energy
             };
 
             // Set the default password for all users
-            const string defaultPassword = "Password123!";
+            const string defaultPassword = "p";
             
             foreach (var user in users)
             {
@@ -81,87 +89,87 @@ namespace AgriEnergyConnect.API.Data
             {
                 // Crop Farmers
                 new Farmer { 
-                    Name = "John Smith", 
+                    Name = "John Doe", 
                     Location = "Western Cape", 
-                    ContactInfo = "john@example.com", 
+                    ContactInfo = "john.doe@agrienergyconnect.co.za", 
                     UserId = farmerUsers[0].Id 
                 },
                 new Farmer { 
-                    Name = "Mary Johnson", 
+                    Name = "Emily Johnson", 
                     Location = "Eastern Cape", 
-                    ContactInfo = "mary@example.com", 
+                    ContactInfo = "emily.johnson@agrienergyconnect.co.za", 
                     UserId = farmerUsers[1].Id 
                 },
                 new Farmer { 
-                    Name = "Robert Brown", 
+                    Name = "Daniel Thomson", 
                     Location = "Northern Cape", 
-                    ContactInfo = "robert@example.com", 
+                    ContactInfo = "daniel.thomson@agrienergyconnect.co.za", 
                     UserId = farmerUsers[2].Id 
                 },
                 new Farmer { 
-                    Name = "Sarah Jones", 
+                    Name = "Olivia Smith", 
                     Location = "Limpopo", 
-                    ContactInfo = "sarah@example.com", 
+                    ContactInfo = "olivia.smith@agrienergyconnect.co.za", 
                     UserId = farmerUsers[3].Id 
                 },
                 new Farmer { 
-                    Name = "David Miller", 
+                    Name = "William Harris", 
                     Location = "Free State", 
-                    ContactInfo = "david@example.com", 
+                    ContactInfo = "william.harris@agrienergyconnect.co.za", 
                     UserId = farmerUsers[4].Id 
                 },
                 
                 // Livestock Farmers
                 new Farmer { 
-                    Name = "Michael Brown", 
+                    Name = "James Anderson", 
                     Location = "KwaZulu-Natal", 
-                    ContactInfo = "michael@example.com", 
+                    ContactInfo = "james.anderson@agrienergyconnect.co.za", 
                     UserId = farmerUsers[5].Id 
                 },
                 new Farmer { 
-                    Name = "Amanda White", 
+                    Name = "Sophia Williams", 
                     Location = "Mpumalanga", 
-                    ContactInfo = "amanda@example.com", 
+                    ContactInfo = "sophia.williams@agrienergyconnect.co.za", 
                     UserId = farmerUsers[6].Id 
                 },
                 new Farmer { 
-                    Name = "Robert Johnson", 
+                    Name = "Jackson Brown", 
                     Location = "North West", 
-                    ContactInfo = "robertj@example.com", 
+                    ContactInfo = "jackson.brown@agrienergyconnect.co.za", 
                     UserId = farmerUsers[7].Id 
                 },
                 
                 // Mixed Farmers
                 new Farmer { 
-                    Name = "Jennifer Lee", 
+                    Name = "Oliver Jones", 
                     Location = "Gauteng", 
-                    ContactInfo = "jennifer@example.com", 
+                    ContactInfo = "oliver.jones@agrienergyconnect.co.za", 
                     UserId = farmerUsers[8].Id 
                 },
                 new Farmer { 
-                    Name = "William Davis", 
+                    Name = "Isabella Davis", 
                     Location = "Western Cape", 
-                    ContactInfo = "william@example.com", 
+                    ContactInfo = "isabella.davis@agrienergyconnect.co.za", 
                     UserId = farmerUsers[9].Id 
                 },
                 
                 // Green Energy Specialists
                 new Farmer { 
-                    Name = "Elizabeth Green", 
+                    Name = "Noah Green", 
                     Location = "Eastern Cape", 
-                    ContactInfo = "elizabeth@example.com", 
+                    ContactInfo = "noah.green@agrienergyconnect.co.za", 
                     UserId = farmerUsers[10].Id 
                 },
                 new Farmer { 
-                    Name = "Thomas Power", 
+                    Name = "Emma Watts", 
                     Location = "Free State", 
-                    ContactInfo = "thomas@example.com", 
+                    ContactInfo = "emma.watts@agrienergyconnect.co.za", 
                     UserId = farmerUsers[11].Id 
                 },
                 new Farmer { 
-                    Name = "Natalie Sun", 
+                    Name = "Lucas Solaris", 
                     Location = "Northern Cape", 
-                    ContactInfo = "natalie@example.com", 
+                    ContactInfo = "lucas.solaris@agrienergyconnect.co.za", 
                     UserId = farmerUsers[12].Id 
                 }
             };
@@ -189,53 +197,61 @@ namespace AgriEnergyConnect.API.Data
             {
                 "Organic Tomatoes", "Fresh Spinach", "Heirloom Carrots", "Organic Potatoes",
                 "Butternut Squash", "Sweet Corn", "Green Beans", "Organic Cabbage",
-                "Bell Peppers", "Pumpkins", "Onions", "Garlic"
+                "Bell Peppers", "Pumpkins", "Onions", "Garlic", "Broccoli", "Cauliflower",
+                "Asparagus", "Eggplant", "Radishes", "Zucchini", "Cucumber", "Kale"
             };
 
             var fruitProducts = new[]
             {
                 "Organic Apples", "Table Grapes", "Strawberries", "Peaches",
                 "Nectarines", "Citrus Assortment", "Blueberries", "Watermelons",
-                "Pears", "Plums", "Avocados", "Mangoes"
+                "Pears", "Plums", "Avocados", "Mangoes", "Bananas", "Papayas",
+                "Guavas", "Litchis", "Kiwifruit", "Dragon Fruit", "Passion Fruit", "Granadillas"
             };
 
             var meatProducts = new[]
             {
                 "Grass-fed Beef", "Free-range Lamb", "Wild Game Meat", "Organic Pork",
-                "Bison Steaks", "Venison", "Goat Meat", "Premium Beef Cuts"
+                "Bison Steaks", "Venison", "Goat Meat", "Premium Beef Cuts",
+                "Ostrich Meat", "Kudu Steaks", "Springbok Fillets", "Warthog Sausages"
             };
 
             var poultryProducts = new[]
             {
                 "Free-range Eggs", "Organic Chicken", "Heritage Turkey", "Duck",
-                "Quail Eggs", "Pheasant", "Guinea Fowl", "Specialty Poultry"
+                "Quail Eggs", "Pheasant", "Guinea Fowl", "Specialty Poultry",
+                "Chicken Breasts", "Duck Eggs", "Goose", "Ostrich Eggs"
             };
 
             var dairyProducts = new[]
             {
                 "Raw Milk", "Artisanal Cheese", "Cultured Butter", "Organic Yogurt",
-                "Kefir", "Cream", "Goat Cheese", "Specialty Dairy Products"
+                "Kefir", "Cream", "Goat Cheese", "Specialty Dairy Products",
+                "Farm Cheese", "Buttermilk", "Ghee", "Whey Protein"
             };
 
             var greenEnergyProducts = new[]
             {
                 "Solar Panels", "Wind Turbine Kits", "Biogas Generators", "Solar Water Pumps",
                 "Solar Greenhouse Systems", "Biodiesel Production Kits", "Energy Storage Solutions",
-                "Energy Efficient Irrigation Systems", "Solar Dryers", "Renewable Energy Consulting"
+                "Energy Efficient Irrigation Systems", "Solar Dryers", "Renewable Energy Consulting",
+                "Solar Tracking Systems", "Micro-Hydro Power Kits", "Biomass Stoves", "Heat Exchange Systems",
+                "Wind Measurement Tools", "Energy Monitoring Systems", "Farm Energy Audit Services"
             };
 
             // Helper function to generate random date within the past year
             DateTime RandomDate()
             {
-                int daysAgo = random.Next(1, 365);
+                int daysAgo = random.Next(1, 180); // Last 6 months
                 return DateTime.Now.AddDays(-daysAgo);
             }
 
+            // Ensure we get to about 50 products by increasing the count for each farmer
             // Add vegetable products for crop farmers (first 5 farmers)
             foreach (var farmer in farmers.Take(5))
             {
-                // Each crop farmer has 2-4 vegetable products
-                int count = random.Next(2, 5);
+                // Each crop farmer has 3-5 vegetable products (increased from 2-4)
+                int count = random.Next(3, 6);
                 var selectedProducts = vegetableProducts.OrderBy(x => random.Next()).Take(count).ToList();
                 
                 foreach (var product in selectedProducts)
@@ -249,10 +265,10 @@ namespace AgriEnergyConnect.API.Data
                     });
                 }
                 
-                // Some also have fruits
-                if (random.Next(2) == 0) // 50% chance
+                // Most also have fruits (increased from 50% to 80% chance)
+                if (random.Next(5) < 4) // 80% chance
                 {
-                    count = random.Next(1, 3);
+                    count = random.Next(2, 4); // Increased from 1-3
                     selectedProducts = fruitProducts.OrderBy(x => random.Next()).Take(count).ToList();
                     
                     foreach (var product in selectedProducts)
@@ -271,8 +287,8 @@ namespace AgriEnergyConnect.API.Data
             // Add meat and poultry products for livestock farmers (next 3 farmers)
             foreach (var farmer in farmers.Skip(5).Take(3))
             {
-                // Each livestock farmer has 2-3 meat products
-                int count = random.Next(2, 4);
+                // Each livestock farmer has 3-4 meat products (increased from 2-3)
+                int count = random.Next(3, 5);
                 var selectedProducts = meatProducts.OrderBy(x => random.Next()).Take(count).ToList();
                 
                 foreach (var product in selectedProducts)
@@ -286,8 +302,8 @@ namespace AgriEnergyConnect.API.Data
                     });
                 }
                 
-                // Each livestock farmer has 1-2 poultry products
-                count = random.Next(1, 3);
+                // Each livestock farmer has 2-3 poultry products (increased from 1-2)
+                count = random.Next(2, 4);
                 selectedProducts = poultryProducts.OrderBy(x => random.Next()).Take(count).ToList();
                 
                 foreach (var product in selectedProducts)
@@ -301,10 +317,10 @@ namespace AgriEnergyConnect.API.Data
                     });
                 }
                 
-                // Some also have dairy
-                if (random.Next(2) == 0) // 50% chance
+                // Most also have dairy (increased from 50% to 80% chance)
+                if (random.Next(5) < 4) // 80% chance
                 {
-                    count = random.Next(1, 3);
+                    count = random.Next(2, 4); // Increased from 1-3
                     selectedProducts = dairyProducts.OrderBy(x => random.Next()).Take(count).ToList();
                     
                     foreach (var product in selectedProducts)
@@ -323,12 +339,12 @@ namespace AgriEnergyConnect.API.Data
             // Add mixed products for mixed farmers (next 2 farmers)
             foreach (var farmer in farmers.Skip(8).Take(2))
             {
-                // Each mixed farmer has 1-2 products from various categories
+                // Each mixed farmer has products from various categories
                 var categories = new[] { vegetableProducts, fruitProducts, meatProducts, poultryProducts, dairyProducts };
                 
                 foreach (var category in categories)
                 {
-                    if (random.Next(3) > 0) // 66% chance for each category
+                    if (random.Next(5) < 4) // 80% chance for each category (increased from 66%)
                     {
                         int count = random.Next(1, 3);
                         var selectedProducts = category.OrderBy(x => random.Next()).Take(count).ToList();
@@ -357,8 +373,8 @@ namespace AgriEnergyConnect.API.Data
             // Add green energy products for energy specialists (last 3 farmers)
             foreach (var farmer in farmers.Skip(10))
             {
-                // Each green energy specialist has 2-4 green energy products
-                int count = random.Next(2, 5);
+                // Each green energy specialist has 3-5 green energy products (increased from 2-4)
+                int count = random.Next(3, 6);
                 var selectedProducts = greenEnergyProducts.OrderBy(x => random.Next()).Take(count).ToList();
                 
                 foreach (var product in selectedProducts)
@@ -379,7 +395,7 @@ namespace AgriEnergyConnect.API.Data
             }
             
             context.SaveChanges();
-            Console.WriteLine($"Created {products.Count} products");
+            Console.WriteLine($"Created {products.Count} products - Initialization complete!");
         }
     }
 }

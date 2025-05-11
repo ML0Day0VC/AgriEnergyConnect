@@ -2,7 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     // API base URL
-    const API_URL = 'http://localhost:5019/api';
+    const API_URL = 'https://localhost:7012/api';
 
     // State management
     let authToken = localStorage.getItem('token');
@@ -535,7 +535,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function initDashboard() {
         // API base URL
-        const API_URL = 'http://localhost:5019/api';
+        const API_URL = 'https://localhost:7012/api';
         const authToken = localStorage.getItem('token');
         const userRole = localStorage.getItem('userRole');
         
