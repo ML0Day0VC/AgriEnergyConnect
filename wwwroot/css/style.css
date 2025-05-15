@@ -281,6 +281,88 @@ section {
 .products-table tbody tr:last-child td {
   border-bottom: none;
 }
+.farmers-table-container {
+  background-color: var(--dark-card);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 1.5rem;
+}
+
+.farmers-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.farmers-table thead {
+  background-color: var(--dark-surface);
+}
+
+.farmers-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--primary);
+  border-bottom: 2px solid var(--border);
+}
+
+.farmers-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--light-text);
+}
+
+.farmers-table tbody tr {
+  transition: background-color 0.2s;
+}
+
+.farmers-table tbody tr:hover {
+  background-color: rgba(74, 222, 128, 0.05);
+}
+
+.farmers-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Farmer name styling */
+.farmer-table-name {
+  font-weight: 600;
+  color: var(--light-text);
+}
+
+/* Location and contact styling */
+.farmer-location {
+  color: var(--muted-text);
+  font-size: 0.9rem;
+}
+
+.farmer-contact {
+  color: var(--light-text);
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9rem;
+}
+
+/* Actions column */
+.farmer-actions {
+  text-align: center;
+}
+
+/* Responsive farmers table */
+@media (max-width: 768px) {
+  .farmers-table-container {
+    overflow-x: auto;
+  }
+  
+  .farmers-table {
+    min-width: 700px;
+  }
+  
+  .farmers-table th,
+  .farmers-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+  }
+}
 
 /* Product name styling */
 .product-name {
@@ -301,10 +383,7 @@ section {
 
 .category-badge.vegetables,
 .category-badge.fruit,
-.category-badge.green-energy {
-  background-color: rgba(74, 222, 128, 0.2);
-  color: var(--primary);
-}
+
 
 .category-badge.meat,
 .category-badge.poultry,
@@ -359,9 +438,11 @@ section {
 /* Result items - Keep for farmers list in admin */
 .result-list {
   display: grid;
-  /*grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));*/
   gap: 1.5rem;
   margin-top: 1.5rem;
+}
+#farmers-list.result-list {
+  display: block; /* Override grid for farmers list */
 }
 
 .result-item {

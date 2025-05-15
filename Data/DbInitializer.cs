@@ -7,7 +7,7 @@ namespace AgriEnergyConnect.API.Data
     public static class DbInitializer
     {
         public static void Initialize(ApplicationDbContext context, PasswordService passwordService)
-        {
+        {       //TODO: remove all green energy people i missunderstood the task
             // Force recreation of database during development for testing
             // Comment these lines for production
             Console.WriteLine("Ensuring database is created with fresh data...");
@@ -230,14 +230,6 @@ namespace AgriEnergyConnect.API.Data
                 "Farm Cheese", "Buttermilk", "Ghee", "Whey Protein"
             };
 
-            var greenEnergyProducts = new[]
-            {
-                "Solar Panels", "Wind Turbine Kits", "Biogas Generators", "Solar Water Pumps",
-                "Solar Greenhouse Systems", "Biodiesel Production Kits", "Energy Storage Solutions",
-                "Energy Efficient Irrigation Systems", "Solar Dryers", "Renewable Energy Consulting",
-                "Solar Tracking Systems", "Micro-Hydro Power Kits", "Biomass Stoves", "Heat Exchange Systems",
-                "Wind Measurement Tools", "Energy Monitoring Systems", "Farm Energy Audit Services"
-            };
 
             // Helper function to generate random date within the past year
             DateTime RandomDate()
@@ -369,25 +361,7 @@ namespace AgriEnergyConnect.API.Data
                     }
                 }
             }
-            
-            // Add green energy products for energy specialists (last 3 farmers)
-            foreach (var farmer in farmers.Skip(10))
-            {
-                // Each green energy specialist has 3-5 green energy products
-                int count = random.Next(3, 6);
-                var selectedProducts = greenEnergyProducts.OrderBy(x => random.Next()).Take(count).ToList();
-                
-                foreach (var product in selectedProducts)
-                {
-                    products.Add(new Product
-                    {
-                        Name = product,
-                        Category = "Green Energy",
-                        ProductionDate = RandomDate(),
-                        FarmerId = farmer.Id
-                    });
-                }
-            }
+                       
 
             foreach (var product in products)
             {

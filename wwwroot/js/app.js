@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <option value="Meat">Meat</option>
                             <option value="Poultry">Poultry</option>
                             <option value="Dairy">Dairy</option>
-                            <option value="Green Energy">Green Energy</option>
+                         
                         </select>
                     </div>
                     <div class="form-group">
@@ -214,7 +214,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Load all farmers for admin view
     async function loadAllFarmers() {
         try {
             const farmersList = document.getElementById('farmers-list');
@@ -234,25 +233,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (farmers.length === 0) {
                 farmersList.innerHTML = `
-                    <div class="message message-warning">
-                        No farmers found.
-                    </div>
-                `;
+                <div class="empty-state">
+                    <div class="empty-state-icon">👨‍🌾</div>
+                    <p>No farmers found.</p>
+                </div>
+            `;
                 return;
             }
 
-            let html = '';
+            // Create farmers table
+            let html = `
+            <div class="farmers-table-container">
+                <table class="farmers-table">
+                    <thead>
+                        <tr>
+                            <th>Farmer Name</th>
+                            <th>Location</th>
+                            <th>Contact Info</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
 
             farmers.forEach(farmer => {
                 html += `
-                    <div class="result-item">
-                        <h4>${farmer.name}</h4>
-                        <p>Location: ${farmer.location}</p>
-                        <p>Contact: ${farmer.contactInfo}</p>
-                        <button class="btn btn-sm btn-secondary view-farmer-products" data-id="${farmer.id}">View Products</button>
-                    </div>
-                `;
+                <tr>
+                    <td class="farmer-table-name">${farmer.name}</td>
+                    <td class="farmer-location">${farmer.location}</td>
+                    <td class="farmer-contact">${farmer.contactInfo}</td>
+                    <td class="farmer-actions">
+                        <button class="btn btn-sm btn-secondary view-farmer-products" data-id="${farmer.id}">
+                            View Products
+                        </button>
+                    </td>
+                </tr>
+            `;
             });
+
+            html += `
+                    </tbody>
+                </table>
+            </div>
+        `;
 
             farmersList.innerHTML = html;
 
@@ -270,11 +293,12 @@ document.addEventListener('DOMContentLoaded', function () {
         } catch (error) {
             console.error('Error loading all farmers:', error);
             document.getElementById('farmers-list').innerHTML = `
-                <div class="message message-error">
-                    Error loading farmers: ${error.message}
-                </div>
-            `;
+            <div class="message message-error">
+                Error loading farmers: ${error.message}
+            </div>
+        `;
         }
+
     }
 
     // Load all products for admin view
@@ -733,7 +757,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    
+
     // Add new farmer (Employee only)
     async function addFarmer() {
         const username = farmerUsername.value;
