@@ -360,18 +360,32 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Display products with farmer info
+    // Display products with farmer info (for admin view)
     function displayProductsWithFarmer(container, products, specificFarmerId = null) {
         if (products.length === 0) {
             container.innerHTML = `
-            <div class="message message-warning">
-                No products found matching your criteria.
-            </div>
-        `;
+                <div class="empty-state">
+                    <div class="empty-state-icon">📦</div>
+                    <p>No products found matching your criteria.</p>
+                </div>
+            `;
             return;
         }
 
-        let html = '';
+        // Create table with farmer column if needed
+        let html = `
+            <div class="products-table-container">
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Production Date</th>
+                            ${!specificFarmerId ? '<th>Farmer</th>' : ''}
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
 
         products.forEach(product => {
             const date = new Date(product.productionDate).toLocaleDateString('en-US', {
@@ -380,23 +394,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 day: 'numeric'
             });
 
-            // Handle both formats: products with embedded farmer objects and products with farmerName property
+            const categoryClass = getCategoryClass(product.category);
             const farmerName = product.farmerName || (product.farmer ? product.farmer.name : 'Unknown Farmer');
 
             html += `
-            <div class="result-item">
-                <span class="badge badge-${getCategoryBadgeClass(product.category)}">${product.category}</span>
-                <h4>${product.name}</h4>
-                <p>Production Date: ${date}</p>
-                ${!specificFarmerId ? `<p>Farmer: ${farmerName}</p>` : ''}
+                <tr>
+                    <td class="product-name">${product.name}</td>
+                    <td>
+                        <span class="category-badge ${categoryClass}">${product.category}</span>
+                    </td>
+                    <td class="production-date">${date}</td>
+                    ${!specificFarmerId ? `<td class="farmer-name">${farmerName}</td>` : ''}
+                </tr>
+            `;
+        });
+
+        html += `
+                    </tbody>
+                </table>
             </div>
         `;
-        });
 
         container.innerHTML = html;
     }
-
-
 
     // Login function
     async function login() {
@@ -713,6 +733,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    
     // Add new farmer (Employee only)
     async function addFarmer() {
         const username = farmerUsername.value;
@@ -830,18 +851,31 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Display products in a grid
+    // Display products in a table/list format
     function displayProducts(container, products) {
         if (products.length === 0) {
             container.innerHTML = `
-                <div class="message message-warning">
-                    No products found matching your criteria.
+                <div class="empty-state">
+                    <div class="empty-state-icon">📦</div>
+                    <p>No products found matching your criteria.</p>
                 </div>
             `;
             return;
         }
 
-        let html = '';
+        // Create table structure
+        let html = `
+            <div class="products-table-container">
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Production Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
 
         products.forEach(product => {
             const date = new Date(product.productionDate).toLocaleDateString('en-US', {
@@ -850,30 +884,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 day: 'numeric'
             });
 
+            const categoryClass = getCategoryClass(product.category);
+
             html += `
-                <div class="result-item">
-                    <span class="badge badge-${getCategoryBadgeClass(product.category)}">${product.category}</span>
-                    <h4>${product.name}</h4>
-                    <p>Production Date: ${date}</p>
-                </div>
+                <tr>
+                    <td class="product-name">${product.name}</td>
+                    <td>
+                        <span class="category-badge ${categoryClass}">${product.category}</span>
+                    </td>
+                    <td class="production-date">${date}</td>
+                </tr>
             `;
         });
+
+        html += `
+                    </tbody>
+                </table>
+            </div>
+        `;
 
         container.innerHTML = html;
     }
 
-    // Get badge class based on category
-    function getCategoryBadgeClass(category) {
-        const categories = {
-            'Vegetables': 'primary',
-            'Fruit': 'primary',
-            'Meat': 'secondary',
-            'Poultry': 'secondary',
-            'Dairy': 'secondary',
-            'Green Energy': 'primary'
-        };
-
-        return categories[category] || 'primary';
+    // Get category class for badge styling
+    function getCategoryClass(category) {
+        const categoryLower = category.toLowerCase().replace(/\s+/g, '-');
+        return categoryLower;
     }
 
     // Show message with appropriate styling

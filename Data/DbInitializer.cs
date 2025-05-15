@@ -40,8 +40,6 @@ namespace AgriEnergyConnect.API.Data
                 
                 // Employee/Admin users
                 new User { Username = "employee1", Role = "Employee" },
-                new User { Username = "supervisor", Role = "Employee" },
-                new User { Username = "coordinator", Role = "Employee" },
 
                 // Farmer users - Crop Farmers
                 new User { Username = "johndoe", Role = "Farmer" },

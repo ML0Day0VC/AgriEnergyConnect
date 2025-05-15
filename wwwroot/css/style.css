@@ -238,10 +238,128 @@ section {
   font-size: 0.875rem;
 }
 
-/* Result items */
+/* Products Table/List View */
+.products-table-container {
+  background-color: var(--dark-card);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 1.5rem;
+}
+
+.products-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.products-table thead {
+  background-color: var(--dark-surface);
+}
+
+.products-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--primary);
+  border-bottom: 2px solid var(--border);
+}
+
+.products-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--light-text);
+}
+
+.products-table tbody tr {
+  transition: background-color 0.2s;
+}
+
+.products-table tbody tr:hover {
+  background-color: rgba(74, 222, 128, 0.05);
+}
+
+.products-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Product name styling */
+.product-name {
+  font-weight: 600;
+  color: var(--light-text);
+}
+
+/* Category badge in table */
+.category-badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.category-badge.vegetables,
+.category-badge.fruit,
+.category-badge.green-energy {
+  background-color: rgba(74, 222, 128, 0.2);
+  color: var(--primary);
+}
+
+.category-badge.meat,
+.category-badge.poultry,
+.category-badge.dairy {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: var(--secondary);
+}
+
+/* Date formatting */
+.production-date {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--muted-text);
+}
+
+/* Farmer name styling */
+.farmer-name {
+  color: var(--light-text);
+  font-weight: 500;
+}
+
+/* Empty state and messages */
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--muted-text);
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+  .products-table-container {
+    overflow-x: auto;
+  }
+  
+  .products-table {
+    min-width: 600px;
+  }
+  
+  .products-table th,
+  .products-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Result items - Keep for farmers list in admin */
 .result-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /*grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));*/
   gap: 1.5rem;
   margin-top: 1.5rem;
 }
