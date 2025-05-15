@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <!-- All Farmers Card -->
             <div class="card">
                 <h3 class="card-title">All Farmers</h3>
-                <button id="load-all-farmers-btn" class="btn btn-secondary">Load All Farmers</button>
+                <button id="load-all-farmers-btn" class="btn btn-secondary">Refresh Farmers</button>
                 <div id="farmers-list" class="result-list mt-4"></div>
             </div>
             
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 </div>
                 
-                <button id="load-all-products-btn" class="btn btn-secondary">Load All Products</button>
+                <button id="load-all-products-btn" class="btn btn-secondary">Refresh Products</button>
                 
                 <!-- Products Display -->
                 <div id="products-list-admin" class="result-list mt-4"></div>
@@ -991,5 +991,296 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Other existing dashboard functions
+    // Load dashboard data for admin/employee
+    async function loadEmployeeDashboardData() {
+        try {
+            // Load farmers and products for charts
+            const [farmersResponse, productsResponse] = await Promise.all([
+                fetch(`${API_URL}/farmers`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                }),
+                fetch(`${API_URL}/products`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                })
+            ]);
 
+            if (!farmersResponse.ok || !productsResponse.ok) {
+                throw new Error('Failed to load dashboard data');
+            }
+
+            const farmers = await farmersResponse.json();
+            const products = await productsResponse.json();
+
+            // Create charts
+            createProductsByCategoryChart(products);
+            createTopProducersChart(farmers, products);
+            createStatsOverview(farmers, products);
+
+        } catch (error) {
+            console.error('Error loading dashboard data:', error);
+        }
+    }
+
+    // Chart 1: Products by Category (Donut Chart)
+    function createProductsByCategoryChart(products) {
+        const canvas = document.getElementById('admin-products-chart');
+        if (!canvas) return;
+
+        // Count products by category (excluding Green Energy)
+        const categoryCount = products.reduce((acc, product) => {
+            if (product.category !== 'Green Energy') {
+                acc[product.category] = (acc[product.category] || 0) + 1;
+            }
+            return acc;
+        }, {});
+
+        const ctx = canvas.getContext('2d');
+
+        // Destroy existing chart if it exists
+        if (window.productsChart) {
+            window.productsChart.destroy();
+        }
+
+        window.productsChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(categoryCount),
+                datasets: [{
+                    data: Object.values(categoryCount),
+                    backgroundColor: [
+                        '#4ade80',  // Green for Vegetables
+                        '#3b82f6',  // Blue for Fruit
+                        '#ef4444',  // Red for Meat
+                        '#f59e0b',  // Orange for Poultry
+                        '#8b5cf6',  // Purple for Dairy
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#242424'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Products by Category',
+                        color: '#f3f4f6',
+                        font: { size: 16, weight: 'bold' }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#f3f4f6',
+                            padding: 15,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Chart 2: Top Producers (Horizontal Bar Chart)
+    function createTopProducersChart(farmers, products) {
+        const canvas = document.getElementById('admin-farmers-chart');
+        if (!canvas) return;
+
+        // Count products per farmer
+        const farmerProductCount = farmers.map(farmer => {
+            const productCount = products.filter(p =>
+                p.farmerId === farmer.id && p.category !== 'Green Energy'
+            ).length;
+            return {
+                name: farmer.name,
+                count: productCount
+            };
+        });
+
+        // Sort by count and take top 8
+        const topProducers = farmerProductCount
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 8);
+
+        const ctx = canvas.getContext('2d');
+
+        // Destroy existing chart if it exists
+        if (window.farmersChart) {
+            window.farmersChart.destroy();
+        }
+
+        window.farmersChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: topProducers.map(f => f.name),
+                datasets: [{
+                    label: 'Number of Products',
+                    data: topProducers.map(f => f.count),
+                    backgroundColor: '#4ade80',
+                    borderColor: '#22c55e',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y', // Makes it horizontal
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Top Producers by Product Count',
+                        color: '#f3f4f6',
+                        font: { size: 16, weight: 'bold' }
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: { color: '#9ca3af' },
+                        grid: { color: '#333333' }
+                    },
+                    y: {
+                        ticks: { color: '#9ca3af' },
+                        grid: { color: '#333333' }
+                    }
+                }
+            }
+        });
+    }
+
+    // Create stats overview
+    function createStatsOverview(farmers, products) {
+        const statsContainer = document.getElementById('admin-stats-summary');
+        if (!statsContainer) return;
+
+        // Calculate stats (excluding Green Energy products)
+        const activeProducts = products.filter(p => p.category !== 'Green Energy');
+        const totalFarmers = farmers.length;
+        const totalProducts = activeProducts.length;
+
+        // Most popular category
+        const categoryCount = activeProducts.reduce((acc, product) => {
+            acc[product.category] = (acc[product.category] || 0) + 1;
+            return acc;
+        }, {});
+
+        const mostPopularCategory = Object.entries(categoryCount)
+            .sort(([, a], [, b]) => b - a)[0];
+
+        // Recent activity (products added in last 30 days)
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const recentProducts = activeProducts.filter(p =>
+            new Date(p.productionDate) >= thirtyDaysAgo
+        ).length;
+
+        statsContainer.innerHTML = `
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h4>Total Farmers</h4>
+                <p class="stat-number">${totalFarmers}</p>
+            </div>
+            <div class="stat-card">
+                <h4>Total Products</h4>
+                <p class="stat-number">${totalProducts}</p>
+            </div>
+            <div class="stat-card">
+                <h4>Most Popular Category</h4>
+                <p class="stat-number">${mostPopularCategory ? mostPopularCategory[0] : 'N/A'}</p>
+                <small>${mostPopularCategory ? mostPopularCategory[1] : 0} products</small>
+            </div>
+            <div class="stat-card">
+                <h4>Recent Activity</h4>
+                <p class="stat-number">${recentProducts}</p>
+                <small>Products in last 30 days</small>
+            </div>
+        </div>
+    `;
+    }
+
+    // Load dashboard data for farmers
+    async function loadFarmerDashboardData() {
+        const farmerId = localStorage.getItem('farmerId');
+        if (!farmerId) return;
+
+        try {
+            const response = await fetch(`${API_URL}/products/farmer/${farmerId}`, {
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            });
+
+            if (!response.ok) return;
+
+            const products = await response.json();
+
+            // Create a simple category breakdown for farmers
+            const farmerStatsContainer = document.querySelector('#farmer-dashboard .card:first-child');
+            if (farmerStatsContainer) {
+                createFarmerStats(products);
+            }
+
+        } catch (error) {
+            console.error('Error loading farmer dashboard data:', error);
+        }
+    }
+
+    function createFarmerStats(products) {
+        // Create farmer dashboard overview
+        const farmerDashboard = document.getElementById('farmer-dashboard');
+
+        // Add dashboard overview before existing cards
+        const dashboardOverview = document.createElement('div');
+        dashboardOverview.className = 'card';
+        dashboardOverview.innerHTML = `
+        <h3 class="card-title">Dashboard Overview</h3>
+        <div id="farmer-stats-grid" class="stats-grid"></div>
+    `;
+
+        // Insert at the beginning
+        farmerDashboard.insertBefore(dashboardOverview, farmerDashboard.firstChild);
+
+        // Calculate farmer stats (excluding Green Energy)
+        const activeProducts = products.filter(p => p.category !== 'Green Energy');
+        const totalProducts = activeProducts.length;
+
+        const categoryCount = activeProducts.reduce((acc, product) => {
+            acc[product.category] = (acc[product.category] || 0) + 1;
+            return acc;
+        }, {});
+
+        const categoriesSupplied = Object.keys(categoryCount).length;
+        const mostProductiveCategory = Object.entries(categoryCount)
+            .sort(([, a], [, b]) => b - a)[0];
+
+        // Recent products (last 30 days)
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        const recentProducts = activeProducts.filter(p =>
+            new Date(p.productionDate) >= thirtyDaysAgo
+        ).length;
+
+        document.getElementById('farmer-stats-grid').innerHTML = `
+        <div class="stat-card">
+            <h4>Total Products</h4>
+            <p class="stat-number">${totalProducts}</p>
+        </div>
+        <div class="stat-card">
+            <h4>Categories Supplied</h4>
+            <p class="stat-number">${categoriesSupplied}</p>
+        </div>
+        <div class="stat-card">
+            <h4>Top Category</h4>
+            <p class="stat-number">${mostProductiveCategory ? mostProductiveCategory[0] : 'N/A'}</p>
+            <small>${mostProductiveCategory ? mostProductiveCategory[1] : 0} products</small>
+        </div>
+        <div class="stat-card">
+            <h4>Recent Activity</h4>
+            <p class="stat-number">${recentProducts}</p>
+            <small>Products in last 30 days</small>
+        </div>
+    `;
+    }
 });

@@ -112,6 +112,7 @@ section {
 .section-title {
   font-size: 1.75rem;
   margin-bottom: 1.5rem;
+  margin-top: 2.2rem;
   color: var(--primary);
   border-bottom: 2px solid var(--border);
   padding-bottom: 0.5rem;
@@ -602,4 +603,87 @@ section {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+/* Add these styles to your style.css file */
+
+/* Dashboard Grid for Charts */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.chart-container {
+  background-color: var(--dark-surface);
+  border-radius: 8px;
+  padding: 1.25rem;
+  height: 350px;
+  position: relative;
+}
+
+.chart-container canvas {
+  background-color: transparent;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.stat-card {
+  background-color: var(--dark-surface);
+  border-radius: 8px;
+  padding: 1.25rem;
+  text-align: center;
+  border: 1px solid var(--border);
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+}
+
+.stat-card h4 {
+  color: var(--muted-text);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-number {
+  color: var(--primary);
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  line-height: 1;
+}
+
+.stat-card small {
+  color: var(--muted-text);
+  font-size: 0.75rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .chart-container {
+    height: 300px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  
+  .stat-number {
+    font-size: 1.75rem;
+  }
 }
