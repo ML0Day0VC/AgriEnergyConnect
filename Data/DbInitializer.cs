@@ -1,10 +1,4 @@
-// STEP 1: Stop your application completely
 
-// STEP 2: Delete the SQLite database file
-// Look for a file named something like "agrienergyconnect.db" or similar in your project folder
-// Delete this file completely
-
-// STEP 3: Use this simplified DbInitializer.cs
 using AgriEnergyConnect.API.Models;
 using AgriEnergyConnect.API.Services;
 using Microsoft.EntityFrameworkCore;

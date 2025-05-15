@@ -757,8 +757,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
-    // Add new farmer (Employee only)
     async function addFarmer() {
         const username = farmerUsername.value;
         const password = farmerPassword.value;
@@ -794,13 +792,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 throw new Error(errorData.message || 'Failed to add farmer');
             }
 
-            // Reset form
             addFarmerForm.reset();
 
-            // Show success message
             showMessage(addFarmerMessage, 'Farmer added successfully!', 'message-success');
-
-            // Reload farmers dropdown
             loadFarmers();
 
         } catch (error) {
@@ -955,9 +949,9 @@ document.addEventListener('DOMContentLoaded', function () {
         input.setAttribute('max', today);
     });
 
-    // Only initialize dashboard if Chart.js is available
+
     if (typeof Chart === 'undefined') {
-        // Dynamically load Chart.js from CDN
+        // chart.js my GOAT
         const script = document.createElement('script');
         script.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js';
         script.integrity = 'sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==';
@@ -973,8 +967,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // Only initialize charts if Chart.js is loaded and user is logged in
         if (typeof Chart === 'undefined' || !authToken || !userRole) return;
 
-        // Create dashboard elements if they don't exist
-        createDashboardElements();
 
         // Load and display dashboard data based on user role
         if (userRole === 'Farmer') {
@@ -983,15 +975,7 @@ document.addEventListener('DOMContentLoaded', function () {
             loadEmployeeDashboardData();
         }
     }
-
-    function createDashboardElements() {
-        // Implemented in the existing code - add dashboard visuals as needed
-
-        // If needed, add additional elements or charts here
-    }
-
-    // Other existing dashboard functions
-    // Load dashboard data for admin/employee
+ 
     async function loadEmployeeDashboardData() {
         try {
             // Load farmers and products for charts
@@ -1124,7 +1108,7 @@ document.addEventListener('DOMContentLoaded', function () {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                indexAxis: 'y', // Makes it horizontal
+                indexAxis: 'y', 
                 plugins: {
                     title: {
                         display: true,
@@ -1283,4 +1267,6 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
     `;
     }
+
+
 });

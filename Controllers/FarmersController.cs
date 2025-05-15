@@ -14,13 +14,11 @@ namespace AgriEnergyConnect.API.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly PasswordService _passwordService;
-        private readonly ILogger<FarmersController> _logger;
 
-        public FarmersController(ApplicationDbContext context, PasswordService passwordService, ILogger<FarmersController> logger)
+        public FarmersController(ApplicationDbContext context, PasswordService passwordService)
         {
             _context = context;
             _passwordService = passwordService;
-            _logger = logger;
         }
 
         // GET: api/farmers
@@ -28,16 +26,14 @@ namespace AgriEnergyConnect.API.Controllers
         [Authorize(Roles = "Employee,Admin")]
         public async Task<ActionResult<IEnumerable<Farmer>>> GetFarmers()
         {
-            _logger.LogInformation("Getting all farmers");
+
             try
             {
                 var farmers = await _context.Farmers.ToListAsync();
-                _logger.LogInformation($"Successfully retrieved {farmers.Count} farmers");
                 return farmers;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to retrieve farmers");
                 return StatusCode(500, "An error occurred while retrieving farmers");
             }
         }
@@ -46,26 +42,24 @@ namespace AgriEnergyConnect.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Farmer>> GetFarmer(int id)
         {
-            _logger.LogInformation($"Getting farmer with id: {id}");
             try
             {
                 var farmer = await _context.Farmers.FindAsync(id);
 
                 if (farmer == null)
                 {
-                    _logger.LogWarning($"Farmer with ID {id} not found");
                     return NotFound();
                 }
 
                 // Only allow admins/employees to access any farmer, or farmers to access their own profile
-                string role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+                string? role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
                 bool isFarmerAuthorized = IsFarmerAuthorized(farmer.Id);
                 
-                _logger.LogInformation($"User role: {role}, IsFarmerAuthorized: {isFarmerAuthorized}");
+
                 
                 if (role == "Farmer" && !isFarmerAuthorized)
                 {
-                    _logger.LogWarning($"Access denied for farmer {id}. User is not authorized to view this farmer profile.");
+             
                     return Forbid();
                 }
 
@@ -73,7 +67,7 @@ namespace AgriEnergyConnect.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error retrieving farmer with ID {id}");
+
                 return StatusCode(500, "An error occurred while retrieving the farmer");
             }
         }
@@ -83,7 +77,7 @@ namespace AgriEnergyConnect.API.Controllers
         [Authorize(Roles = "Employee,Admin")]
         public async Task<ActionResult<Farmer>> CreateFarmer(FarmerCreateRequest request)
         {
-            _logger.LogInformation("Creating new farmer");
+
             try
             {
                 // Create user account first
@@ -98,7 +92,7 @@ namespace AgriEnergyConnect.API.Controllers
 
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation($"Created user with ID {user.Id} for new farmer");
+
 
                 // Now create farmer profile
                 var farmer = new Farmer
@@ -111,13 +105,12 @@ namespace AgriEnergyConnect.API.Controllers
 
                 _context.Farmers.Add(farmer);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation($"Successfully created farmer with ID {farmer.Id}");
 
                 return CreatedAtAction(nameof(GetFarmer), new { id = farmer.Id }, farmer);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to create farmer");
+
                 return StatusCode(500, "An error occurred while creating the farmer");
             }
         }
@@ -131,15 +124,14 @@ namespace AgriEnergyConnect.API.Controllers
                 {
                     return true;
                 }
-                
+                //todo
                 var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value);
                 bool isAuthorized = _context.Farmers.Any(f => f.Id == farmerId && f.UserId == userId);
-                _logger.LogInformation($"IsFarmerAuthorized check: UserId={userId}, FarmerId={farmerId}, IsAuthorized={isAuthorized}");
+             
                 return isAuthorized;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in IsFarmerAuthorized method");
                 return false;
             }
         }
