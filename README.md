@@ -1,4 +1,4 @@
-# AgriEnergyConnect
+# Agri Energy Connect
 
 AgriEnergyConnect is a project designed to streamline and enhance the connection between agricultural producers and energy solutions.
 
